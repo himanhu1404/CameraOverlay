@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">Try before you buy</string>
+    <string name="title_activity_main">Try before you buy</string>
+    <string name="button_use_camera">Use Camera</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="button_capture_text">SNAP</string>
+    <string name="content_desc_overlay">overlay</string>
+    <string name="content_desc_overlay2">overlay2</string>
+    <string name="content_desc_overlay3">overlay2</string>
+    <string name="content_desc_image_just_taken">Image just taken</string>
+
+</resources>
