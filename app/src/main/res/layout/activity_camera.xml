@@ -106,7 +106,7 @@
         android:layout_gravity="right|bottom"
         android:onClick="onCaptureClick"
         android:padding="@dimen/padding_medium"
-        android:text="@string/button_capture_text" />
+        android:background="@drawable/camera"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -114,13 +114,138 @@
         android:layout_gravity="right|top"
         android:onClick="onSwitchCamClick"
         android:padding="@dimen/padding_medium"
-        android:text="Switch Cam" />
+        android:background="@drawable/switchcamera"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="84dp"
         android:layout_height="wrap_content"
         android:layout_gravity="left|top"
         android:onClick="onClickSwitchASIN"
+        android:padding="8dp"
+        android:layout_marginLeft="-5dp"
+        android:text="Next ASIN" />
+
+    <Button
+        android:id="@+id/button_zoom"
+        android:background="@drawable/semitransparentbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:visibility="invisible"
         android:padding="@dimen/padding_medium"
-        android:text="Switch ASIN" />
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:text="1.00 meter"
+        android:tag="1.0"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        android:layout_marginTop="43dp"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_view8x"
+                    android:layout_width="fill_parent"
+                    android:layout_height="75dp"
+                    android:contentDescription="@string/content_desc_overlay3"
+                    android:src="@drawable/tie"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="@drawable/side_pane_image_brder"
+                    android:adjustViewBounds="true"/>
+                <ImageView
+                    android:id="@+id/image_view8y"
+                    android:layout_width="fill_parent"
+                    android:layout_height="75dp"
+                    android:contentDescription="@string/content_desc_overlay3"
+                    android:src="@drawable/tie"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="@drawable/side_pane_image_brder"
+                    android:adjustViewBounds="true"/>
+                <ImageView
+                    android:id="@+id/image_viewz"
+                    android:layout_width="fill_parent"
+                    android:layout_height="75dp"
+                    android:contentDescription="@string/content_desc_overlay3"
+                    android:src="@drawable/wristwatch2"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="@drawable/side_pane_image_brder"
+                    android:adjustViewBounds="true"/>
+                <ImageView
+                    android:id="@+id/image_viewx1"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:contentDescription="@string/content_desc_overlay3"
+                    android:src="@drawable/tie"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="@drawable/side_pane_image_brder"
+                    android:adjustViewBounds="true"/>
+                <ImageView
+                    android:id="@+id/image_viewy1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="75dp"
+                    android:contentDescription="@string/content_desc_overlay3"
+                    android:src="@drawable/tie"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="@drawable/side_pane_image_brder"
+                    android:adjustViewBounds="true"/>
+                <ImageView
+                    android:id="@+id/image_viewz3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="75dp"
+                    android:contentDescription="@string/content_desc_overlay3"
+                    android:src="@drawable/wristwatch2"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="@drawable/side_pane_image_brder"
+                    android:adjustViewBounds="true"/>
+                <ImageView
+                    android:id="@+id/image_viewx2"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:contentDescription="@string/content_desc_overlay3"
+                    android:src="@drawable/tie"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="@drawable/side_pane_image_brder"
+                    android:adjustViewBounds="true"/>
+                <ImageView
+                    android:id="@+id/image_viewy2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="75dp"
+                    android:contentDescription="@string/content_desc_overlay3"
+                    android:src="@drawable/tie"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="@drawable/side_pane_image_brder"
+                    android:adjustViewBounds="true"/>
+                <ImageView
+                    android:id="@+id/image_viewz2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="75dp"
+                    android:contentDescription="@string/content_desc_overlay3"
+                    android:src="@drawable/wristwatch2"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:background="@drawable/side_pane_image_brder"
+                    android:adjustViewBounds="true"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+
 </FrameLayout>
