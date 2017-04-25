@@ -1,5 +1,7 @@
 package com.example.customoverlay;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Environment;
 
 import java.io.File;
@@ -41,8 +43,8 @@ public class MediaHelper {
         return mediaFile;
     }
 
-    public static boolean saveToFile(byte[] bytes, File file){
-        boolean saved = false;
+    public static boolean saveToFile(Bitmap newBitmap, File file){
+        /*boolean saved = false;
         try {
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bytes);
@@ -53,7 +55,45 @@ public class MediaHelper {
         } catch (IOException e) {
             Log.e("IOException", e);
         }
+        return saved;*/
+
+        boolean saved = false;
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            newBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+
+            out.flush();
+            out.close();
+            saved=true;
+        } catch (FileNotFoundException e) {
+            Log.d("In Saving File", e );
+        } catch (IOException e) {
+            Log.d("In Saving File", e );
+        }
+
         return saved;
+    }
+
+    public Bitmap combineImages(Bitmap frame, Bitmap image) {
+        Bitmap cs = null;
+        Bitmap rs = null;
+
+        rs = Bitmap.createScaledBitmap(frame, image.getWidth() + 50,
+                image.getHeight() + 50, true);
+
+        cs = Bitmap.createBitmap(rs.getWidth(), rs.getHeight(),
+                Bitmap.Config.RGB_565);
+
+        Canvas comboImage = new Canvas(cs);
+
+        comboImage.drawBitmap(image, 25, 25, null);
+        comboImage.drawBitmap(rs, 0, 0, null);
+        if (rs != null) {
+            rs.recycle();
+            rs = null;
+        }
+        Runtime.getRuntime().gc();
+        return cs;
     }
 
 }

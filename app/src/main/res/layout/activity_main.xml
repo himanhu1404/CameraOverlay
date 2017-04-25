@@ -12,8 +12,9 @@
 
     <Button
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:onClick="onUseCameraClick"
+        android:background="#AAFF9900"
         android:text="@string/button_use_camera" />
 
     <ImageView

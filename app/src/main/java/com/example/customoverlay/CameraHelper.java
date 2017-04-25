@@ -1,10 +1,14 @@
 package com.example.customoverlay;
 
+import android.content.res.Resources;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 
 /**
  * Used to make camera use in the tutorial a bit more obvious
@@ -42,6 +46,8 @@ public class CameraHelper {
     }
 
 
+
+
     public static float spacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
@@ -58,17 +64,17 @@ public class CameraHelper {
             {
                 ViewGroup from = (ViewGroup) view.getParent();
                 from.removeView(view);
-                v.setBackground(@drawable/dragsquare1);//TODO: change this pseudo code.
+                v.setBackground(@drawable/dragsquare1);
                 return true;
             } else if(view.getId()==R.id.circleImage1 && v.getId()==R.id.circleImage){
                 ViewGroup from = (ViewGroup) view.getParent();
                 from.removeView(view);
-                v.setBackground(@drawable/dragcircle1);//TODO: change this pseudo code.
+                v.setBackground(@drawable/dragcircle1);
                 return true;
             } else if(view.getId()==R.id.triangleImage1 && v.getId()==R.id.triangleImage){
                 ViewGroup from = (ViewGroup) view.getParent();
                 from.removeView(view);
-                v.setBackground(@drawable/dragtriangle1);//TODO: change this pseudo code.
+                v.setBackground(@drawable/dragtriangle1);
                 return true;
             } else {
                 return false;

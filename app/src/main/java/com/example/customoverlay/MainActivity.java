@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.testfairy.TestFairy;
+
 /**
  * Gives a simple UI that detects if this device has a camera,
  * informing the user if they do or dont
@@ -26,7 +28,6 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         String message = "Click the button below to start";
         if(cameraNotDetected()){

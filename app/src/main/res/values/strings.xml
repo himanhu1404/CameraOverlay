@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Try before you buy</string>
-    <string name="title_activity_main">Try before you buy</string>
+    <string name="title_activity_main">amazon virtual</string>
     <string name="button_use_camera">Use Camera</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="button_capture_text">SNAP</string>

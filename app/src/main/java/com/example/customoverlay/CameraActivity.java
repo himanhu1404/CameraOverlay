@@ -2,6 +2,7 @@ package com.example.customoverlay;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -14,10 +15,20 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.AlphaAnimation;
+import android.content.res.Configuration;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.DecimalFormat;
+import java.lang.Runnable;
+import java.io.ByteArrayOutputStream;
 
 import static com.example.customoverlay.CameraHelper.cameraAvailable;
 import static com.example.customoverlay.CameraHelper.getCameraInstance;
@@ -34,6 +45,7 @@ public class CameraActivity extends Activity implements PictureCallback {
 
     protected static final String EXTRA_IMAGE_PATH = "com.example.customoverlay.EXTRA_IMAGE_PATH";
 
+    private long numberOfThreadZooming = 0;
     private Camera camera;
     private CameraPreview cameraPreview;
     Bitmap mBitmap;
@@ -87,12 +99,6 @@ public class CameraActivity extends Activity implements PictureCallback {
             ImageView imageview =(ImageView) findViewById(viewIdList.get(0));
             imageview.setVisibility(View.VISIBLE);
         }
-        /*this.findViewById(R.id.image_view).setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch (View v, MotionEvent event) {
-                return onTouchFunction(v, event);
-            }
-        });*/
 
     }
 
@@ -175,6 +181,7 @@ public class CameraActivity extends Activity implements PictureCallback {
                         matrix.set(savedMatrix);
                         float scale = newDist / oldDist;
                         matrix.postScale(scale, scale, mid.x, mid.y);
+                        updateZoomValue(scale);
                     }
                 }
                 break;
@@ -184,6 +191,42 @@ public class CameraActivity extends Activity implements PictureCallback {
         return true;
     }
 
+    //update the zoom numbers on activity_camers
+    private void updateZoomValue(float scale){
+        final TextView cameraDescriptionTextView = (TextView) findViewById(R.id.button_zoom);
+        Double currentZoom = Double.parseDouble(cameraDescriptionTextView.getTag()+"");
+        //String[] temp = currentZoom.toString().split(" +"); //1 meter
+        Double asinPreviousDepth  = currentZoom;//Float.parseFloat(temp[0]);
+        float distChanged = 100/scale;
+
+        if(scale > 1){
+            distChanged *= -1;
+        }else{
+            distChanged *= 1;
+            distChanged /= 3; //magic number, for scale to match in caleup and down
+        }
+        distChanged/= 2000;//Magic number, so matchup scalling numbers with our hard coding numbers
+        double asinCurrentDepth = asinPreviousDepth + distChanged;
+
+        if(asinCurrentDepth <= 0f){
+            asinCurrentDepth = 0.1f;
+        }
+
+        String stringAsinCurrentDepth = asinCurrentDepth + "";
+
+
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(1);
+        cameraDescriptionTextView.startAnimation(in);
+
+        cameraDescriptionTextView.setText( Math.round(asinCurrentDepth * 100D) / 100D + " meter" );
+        cameraDescriptionTextView.setTag(asinCurrentDepth);
+
+        final Animation out = new AlphaAnimation(1.0f, 0.0f);
+        out.setDuration(2000);
+        cameraDescriptionTextView.startAnimation(out);
+
+    }
 
     // Show the camera view on the activity
     private void initCameraPreview() {
@@ -246,14 +289,75 @@ public class CameraActivity extends Activity implements PictureCallback {
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         Log.d("Picture taken");
-        String path = savePictureToFileSystem(data);
+
+        Bitmap  newBitmap = overlapImageView(data, getResources(), camera, CurrentVisibleViewID);
+
+        String path = savePictureToFileSystem(newBitmap);
         setResult(path);
         finish();
     }
 
-    private static String savePictureToFileSystem(byte[] data) {
+    private Bitmap overlapImageView(byte[] data, Resources res, Camera camera, int CurrentVisibleViewID){
+
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        //o.inJustDecodeBounds = true;
+        Bitmap cameraBitmapNull = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+
+        int wid = options.outWidth;
+        int hgt = options.outHeight;
+        Matrix nm = new Matrix();
+
+        ImageView imageView = (ImageView) findViewById(CurrentVisibleViewID);
+
+        Camera.Size cameraSize = camera.getParameters().getPictureSize();
+        float ratio = imageView.getHeight()*1f/cameraSize.height;
+        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            nm.postRotate(90);
+            nm.postTranslate(hgt, 0);
+            wid = options.outHeight;
+            hgt = options.outWidth;
+            ratio = imageView.getWidth()*1f/cameraSize.height;
+
+        }else {
+            wid = options.outWidth;
+            hgt = options.outHeight;
+            ratio = imageView.getHeight()*1f/cameraSize.height;
+        }
+
+        float[] f = new float[9];
+        matrix.getValues(f);
+
+        f[0] = f[0]/ratio;
+        f[4] = f[4]/ratio;
+        f[5] = f[5]/ratio;
+        f[2] = f[2]/ratio;
+        matrix.setValues(f);
+
+        Bitmap newBitmap = Bitmap.createBitmap(wid, hgt,
+                Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(newBitmap);
+        Bitmap cameraBitmap = BitmapFactory.decodeByteArray(data, 0,
+                data.length, options);
+
+        canvas.drawBitmap(cameraBitmap, nm, null);
+        cameraBitmap.recycle();
+        ImageView asinImageView =(ImageView) findViewById(CurrentVisibleViewID);
+        Bitmap bitmap = ((BitmapDrawable)asinImageView.getDrawable()).getBitmap();
+        //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        canvas.drawBitmap(bitmap, matrix, null);
+        bitmap.recycle();
+
+        return newBitmap;
+    }
+
+
+
+    private static String savePictureToFileSystem(Bitmap newBitmap) {
         File file = getOutputMediaFile();
-        saveToFile(data, file);
+        saveToFile(newBitmap, file);
         return file.getAbsolutePath();
     }
 
