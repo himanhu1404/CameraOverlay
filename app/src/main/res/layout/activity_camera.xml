@@ -134,7 +134,7 @@
         android:visibility="invisible"
         android:padding="@dimen/padding_medium"
         android:textColor="#FFFFFF"
-        android:textSize="30sp"
+        android:textSize="30dp"
         android:text="1.00 meter"
         android:tag="1.0"/>
 

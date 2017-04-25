@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Button;
+import android.content.Context;
 
 import com.testfairy.TestFairy;
 
@@ -23,13 +25,14 @@ import com.testfairy.TestFairy;
 public class MainActivity extends Activity {
 
     private static final int REQ_CAMERA_IMAGE = 123;
+    private static String imagePath = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String message = "Click the button below to start";
+        String message = "";
         if(cameraNotDetected()){
             message = "No camera detected, clicking the button below will have unexpected behaviour.";
         }
@@ -53,6 +56,8 @@ public class MainActivity extends Activity {
             String imgPath = data.getStringExtra(CameraActivity.EXTRA_IMAGE_PATH);
             Log.i("Got image path: "+ imgPath);
             displayImage(imgPath);
+            dsplayShareIcon();
+            this.imagePath = imgPath;
         } else
         if(requestCode == REQ_CAMERA_IMAGE && resultCode == RESULT_CANCELED){
             Log.i("User didn't take an image");
@@ -62,5 +67,18 @@ public class MainActivity extends Activity {
     private void displayImage(String path) {
         ImageView imageView = (ImageView) findViewById(R.id.image_view_captured_image);
         imageView.setImageBitmap(BitmapHelper.decodeSampledBitmap(path, 300, 250));
+    }
+
+    private void dsplayShareIcon(){
+        Button button = (Button)findViewById(R.id.shareButton);
+        button.setVisibility(View.VISIBLE);
+    }
+
+    @FromXML
+    public void onShare(View button){
+        if(null==imagePath){
+            return;
+        }
+        Intent shareIntent = ShareIntent.shareImage(MyApplication.getAppContext(), imagePath);
     }
 }
